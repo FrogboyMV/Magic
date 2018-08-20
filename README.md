@@ -74,6 +74,7 @@ Here is a list of all of the plugin paramters and what they do.  As a quick note
 
 **Learn From Essence Text** - Text format for learning a spell by acquiring essence. %1 = Actor Name, %2 - Skill.
 
+
   
 ### Class Config
 
@@ -128,15 +129,15 @@ The second really important part of this plugin is Spell Lists.  If you've playe
   * **School** - Each spell may be given a school.  This is  way to group spells so that some classes only gain access to a subset of a spell list.  Later on, I hope to implement ways to grant bonuses to individual schools of magic.
   * **Power Use** - If a caster uses Powers, this is where you define it's usage.
     * **Uses** - Number of times this power can be used.
-	   * **Frequency** - How long you need to wait before power is available again.
-	     * **Day** - This power can be used Uses/Day.
-	     * **Encounter** - This power can be used Uses/Encounter.
-	     * **Rounds** - This power can be used once every Uses/Rounds.
-	     * **At Will** - This power can be used at will or as often as they want.
+	* **Frequency** - How long you need to wait before power is available again.
+	  * **Day** - This power can be used Uses/Day.
+	  * **Encounter** - This power can be used Uses/Encounter.
+	  * **Rounds** - This power can be used once every Uses/Rounds.
+	  * **At Will** - This power can be used at will or as often as they want.
   * **Exposure Amount** - Being exposed to this spell allows an actor to partially learn this spell (0-100).  So if an enemy uses a spell from an actor's spell list, this list, and this spell has an exposure amount of 50, the actor will learn 50% of the spell.  The second time they exposed to this spell, they will know 100% of the spell and will learn it completely.  They are then free to utilize the spell for themself.
   * **Components** - You didn't think I'd make a D&D-like magic system without allowing you to specify spell components, did you?  Oh, ye of little faith.  So yeah, if you're spell needs some Eye of Newt, define that here.
     * **Item Id** - Item required to use this spell.
-	   * **Count** - Number of this item needed to use this spell.
+	* **Count** - Number of this item needed to use this spell.
   * **Prerequisite** - Required spells needed to learn this spell.  Maybe a character need to learn Fire 1 before they can learn Fire 2.  That kinda makes sense.  If you want to set up your magic system so that certain spells need to be learned before other, more powerful ones, you can set up prerequisites.
   * **Can Learn** - Perhaps a spell is rare or unique.  Maybe it can't be just learned normally throught the Learn command.  If that's the case, set this to false.
   
@@ -170,3 +171,15 @@ You're almost to the home stretch.  In fact, if you aren't going to use essence 
   * **Skill Id** - Skill that is learned form this item.
   * **Essence Type** - Essence type required to learn this skill.
   * **Essence Required** - Required amount of essence this skill needs to be learned.  Low level spells won't need much essence to learn.  High level skills will need a lot.  This allows you to ensure that players don't just kill weak creatures to learn their spells.
+
+
+## Terms of Use
+
+This plugin can be used in commercial or non-commercial projects.  You also have my permission to write and share plugins that add to or extend the functionality of this plugin.  While not required, if you use this in a commercial game, a free copy of the game would be nice as I put a lot of work into this and would love to see how you used it in your game.
+
+Credit Frogboy in your work.
+
+
+## Changelog
+
+* Version 0.9 - Beta release
