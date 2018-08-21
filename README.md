@@ -173,6 +173,35 @@ You're almost to the home stretch.  In fact, if you aren't going to use essence 
   * **Essence Required** - Required amount of essence this skill needs to be learned.  Low level spells won't need much essence to learn.  High level skills will need a lot.  This allows you to ensure that players don't just kill weak creatures to learn their spells.
 
 
+## Plugin Commands and Script Calls
+
+Strangely enough, this plugin doesn't have a many script calls or plugin commands.  Well, it technically does but most of them would only be useful if you are a skilled JavaScript coder and if that's the case, look at the next to last section of the plugin code for a well documented list of script calls.  But for the general audience, I only have a couple plugin commands to share that I think will be useful.
+
+Recover magic for a single actor.  This only recovers spell slots and powers.  The editor's Recover All command is normally used to recover all HP, MP, spell slots and powers.
+```javascript
+MAGIC RECOVER actorId
+ex. MAGIC RECOVER 3
+```
+
+Recover magic for all actors.  This only recovers spell slots and powers.  The editor's Recover All command is normally used to recover all HP, MP, spell slots and powers.
+```javascript
+MAGIC RECOVERALL
+ex. MAGIC RECOVERALL
+```
+
+Add a school of magic to an actor:
+```javascript
+MAGIC ADDSCHOOL actorId skillTypeId school
+ex. MAGIC ADDSCHOOL 3 1 Evocation
+```
+
+Remove a school of magic from an actor:
+```javascript
+MAGIC REMSCHOOL [actorId] [skillTypeId] [school]
+ex. MAGIC REMSCHOOL 3 1 Divination
+```
+
+
 ## Terms of Use
 
 This plugin can be used in commercial or non-commercial projects.  You also have my permission to write and share plugins that add to or extend the functionality of this plugin.  While not required, if you use this in a commercial game, a free copy of the game would be nice as I put a lot of work into this and would love to see how you used it in your game.
