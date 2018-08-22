@@ -4,14 +4,15 @@
 
 So who likes magic?  No one?  Oh well, I guess I’ve got nothing to share then.  Wait, what’s that?  Oh, sorry.  I’ve must have heard you wrong.  You make RPGs, of course you like magic!  Who doesn’t?  And even if you don't, you'll still like this plugin.
 
-![Boring](/img/boring.PNG)
-###### Boooring!
-
 RPG Maker gives you some nice tools to build that RPG you’ve always wanted to make and the Skills system is fairly robust.  But there’s a problem and it’s actually kind of a big one.  All of the actor’s typically feel, well, samey.  I mean, I have this Fighter.  He uses skills which cost MP to perform special attacks until his MP runs out.  I also have a Mage.  She uses skills which cost MP to cast spells until her MP runs out.  In fact, all of my actors follow this same exact mechanic.  It would be much cooler if actor of different flavor felt and played differently from one another and had their own unique mechanics to work with.  There are plugins out there to change up the Skill system but you end up with the same issue.  All of your actor now use this new system but your Fighter still functions pretty much the same as your Mage.  You could try to add in several of these plugins that change the Skill system in different ways but that sounds like a risky proposition.  Conflicts seem likely in this scenario.
+
+![snap01](/img/snap01.PNG)
 
 Enter Frog Magic, the one-stop shop for all of your skill/magic needs.  With my latest plugin, you’ll be able to create a wide range of class mechanics to make your characters fun, unique and memorable.  So what can you make?  How about a Fighter who has range of various attacks that can be used At Will, operate on a cool-down every few turns or more powerful maneuvers usable a certain number of times per day?  Alongside this Fighter, you can have a Wizard who has spells slots like in Dungeons & Dragons or Final Fantasy 1.  Maybe your Wizard only learns a few spells but can buy scrolls to add to her spellbook.  But hey, you also want a Sorcerer class who is born with natural magic ability.  He can’t learn spells from scrolls and only gets a small subset of his choosing but is graced with a larger allotment of spell slots per day to work with.  Your cleric doesn’t even need to choose which spells he knows or learn them from scrolls as his god has already bestowed on him this knowledge.  He does need to choose which spells to prepare each day and can change his memorized spells as situation calls for.  Perhaps your Druid or Mimic can only learn spells from the creatures you encounter out in the wild.  When she witnesses a spell or ability being used in battle enough times, she’ll learn it herself and can harness the same power.  How about yet another class who can equip magical items that teach them skills by absorbing the essence of slain enemies (like Espers in Final Fantasy 6)?  Or maybe hybrid classes like the Paladin who have a small list of spells that use slots and several class abilities that are usable a certain number of times per day?  That would be crazy right?
 
 Not any longer.  If you know me and my work, you’ll know that my plugins are powerful, versatile and allow you to combine properties together to make your game totally original.  Frog Magic will give you the power to add the following to your game.
+
+![snap02](/img/snap02.PNG)
 
 ## Features
 
