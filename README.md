@@ -14,6 +14,7 @@ Not any longer.  If you know me and my work, you’ll know that my plugins are p
 
 ![snap02](/img/snap02.PNG)
 
+
 ## Features
 
 Each class can be assigned any number of Skill Types that use whatever skill or magic system you create.
@@ -27,6 +28,8 @@ Each class can be assigned any number of Skill Types that use whatever skill or 
 * Allow or restrict acquiring spells by player choice (player choice), items (learning from scrolls), exposure (learning by seeing the spell used in battle) and essence (slaying monsters while wearing special equipment).
 * Spell components. Does that spell require Eye of Newt?  Your heroes better go find some newt.
 * Mix and match all of the above however you want. Lots of room to add new capabilities in the future.  Feel free to make requests.
+
+![snap03](/img/snap03.PNG)
 
 
 ## How to Use
