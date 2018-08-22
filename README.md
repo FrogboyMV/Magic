@@ -2,17 +2,18 @@
 
 ## Introduction
 
-So who likes magic?  No one?  Oh well, I guess I’ve got nothing to share then.  Wait, what’s that?  Oh, sorry.  I’ve must have heard you wrong.  You make RPGs, of course you like magic!  Who doesn’t?
+So who likes magic?  No one?  Oh well, I guess I’ve got nothing to share then.  Wait, what’s that?  Oh, sorry.  I’ve must have heard you wrong.  You make RPGs, of course you like magic!  Who doesn’t?  And even if you don't, you'll still like this plugin.
 
 RPG Maker gives you some nice tools to build that RPG you’ve always wanted to make and the Skills system is fairly robust.  But there’s a problem and it’s actually kind of a big one.  All of the actor’s typically feel, well, samey.  I mean, I have this Fighter.  He uses skills which cost MP to perform special attacks until his MP runs out.  I also have a Mage.  She uses skills which cost MP to cast spells until her MP runs out.  In fact, all of my actors follow this same exact mechanic.  It would be much cooler if actor of different flavor felt and played differently from one another and had their own unique mechanics to work with.  There are plugins out there to change up the Skill system but you end up with the same issue.  All of your actor now use this new system but your Fighter still functions pretty much the same as your Mage.  You could try to add in several of these plugins that change the Skill system in different ways but that sounds like a risky proposition.  Conflicts seem likely in this scenario.
 
-Enter Frog Magic, the one-stop shop for all of your skill/magic needs.  With my latest plugin, you’ll be able to create a wide range of class mechanics to make your characters fun, unique and memorable.  So what can you make?  How about a Fighter who has range of various attacks that can be used At Will, operate on a cool-down every few turns or more powerful maneuvers usable a certain number of times per day?  Alongside this Fighter, you can have a Wizard who has spells slots like in Dungeons & Dragons or Final Fantasy 1.  Maybe your Wizard only learns a few spells but can buy scrolls to add to her spellbook.  But hey, you also want a Sorcerer class who is born with natural magic ability.  He can’t learn learn spells from scrolls and only gets a small subset of his choosing but is graced with a larger allotment of spell slots per day to work with.  Your cleric doesn’t even need to choose which spells he knows or learn them from scrolls as his god has already bestowed on him this knowledge.  He does need to choose which spells to prepare each day and can change his memorized spells as situation calls for.  Perhaps your Druid or Mimic can only learn spells from the creatures you encounter out in the wild.  When she witnesses a spell or ability being used in battle enough times, she’ll learn it herself and can harness the same power.  How about yet another class who can equip magical items that teach them skills by absorbing the essence of slain enemies (like Espers in Final Fantasy 6)?  Or maybe hybrid classes like the Paladin who have a small list of spells that use slots and several class abilities that are usable a certain number of times per day?  That would be crazy right?
+Enter Frog Magic, the one-stop shop for all of your skill/magic needs.  With my latest plugin, you’ll be able to create a wide range of class mechanics to make your characters fun, unique and memorable.  So what can you make?  How about a Fighter who has range of various attacks that can be used At Will, operate on a cool-down every few turns or more powerful maneuvers usable a certain number of times per day?  Alongside this Fighter, you can have a Wizard who has spells slots like in Dungeons & Dragons or Final Fantasy 1.  Maybe your Wizard only learns a few spells but can buy scrolls to add to her spellbook.  But hey, you also want a Sorcerer class who is born with natural magic ability.  He can’t learn spells from scrolls and only gets a small subset of his choosing but is graced with a larger allotment of spell slots per day to work with.  Your cleric doesn’t even need to choose which spells he knows or learn them from scrolls as his god has already bestowed on him this knowledge.  He does need to choose which spells to prepare each day and can change his memorized spells as situation calls for.  Perhaps your Druid or Mimic can only learn spells from the creatures you encounter out in the wild.  When she witnesses a spell or ability being used in battle enough times, she’ll learn it herself and can harness the same power.  How about yet another class who can equip magical items that teach them skills by absorbing the essence of slain enemies (like Espers in Final Fantasy 6)?  Or maybe hybrid classes like the Paladin who have a small list of spells that use slots and several class abilities that are usable a certain number of times per day?  That would be crazy right?
 
 Not any longer.  If you know me and my work, you’ll know that my plugins are powerful,  versatile and allow you to combine properties together to make your game totally original.  Frog Magic will give you the power to add the following to your game.
 
 ## Features
 
 Each class can be assigned any number of Skill Types that use whatever skill or magic system you create.
+
 * 3 different caster types: prepared, spontaneous and hybrid.
 * 3 different resources: spell slots, magic points and powers.
 * Actors can automatically know none, all or only zero-level spells.
@@ -26,7 +27,7 @@ Each class can be assigned any number of Skill Types that use whatever skill or 
 
 ## How to Use
 
-Here is a list of all of the plugin paramters and what they do.  As a quick note of reference, the terms Spell, Magic and Power all typically mean the same thing.  They are simply Skills.
+Here is a list of all of the plugin parameters and what they do.  As a quick note of reference, the terms Spell, Magic and Power all typically mean the same thing.  They are simply Skills.
 
 **Save Magic Object** - Setting this to true allows you to modify the $frogMagic object, which contains all of the information within the plugin parameters, when the player saves the game. By default, this object is built from the plugin parameters when a new game is started or a saved game is loaded. This is usually what you’ll want. If, for some reason, you need to alter this data in-game and have those changes persist until the end of the game, you’ll need to turn this option on.
 
@@ -109,10 +110,14 @@ This is where you'll configure your class's skill and magic systems.  These para
 * **Learn From Exposure** - Can learn spells when allies or enemies use them in battle similar to a Final Fantasy Blue Mage.  Since my goal for this plugin is to allow you to replicate almost every other magic system, it wouldn't be complete without a way to learn spells from the creatures you battle now would it?  Set this to true if this class learns spells this way.
 * **Learn From Essence** - Can learn spells through equipment by absorbing the essence of enemies defeated in battle.  Later on, you will be able to configure enemies to bestow their essence or spirit when killed.  You can also configure equipment that draws in this essence and allows the wearer to partially learn one or more spells.  If they gain enough of the required essence, they learn a new spell.  If you've ever played Final Fantasy 6 and know how characters learn spells by equipping Espers then you pretty know how this works.
 * **Show As MP** - Each class can have any number of magic systems attached to it but unfortunately, the status windows don't have unlimited space to show all of these.  Therefore, you have to choose which one to display where an actor's MP gauge normally goes.  Set this option to true to indicate that this should be displayed in the MP area.  If more than one is set to true, the plugin will use the first one set this way.
-* **MP Text** - If Show As MP is the first magic entry set to true, use this text for this classes MP label. Leave blank to use the default MP label defined in the System tab.
-* **Use Text** - The Skills menu usually just allows you to select the Skill Type and all of your learned skills are there for use.  But this magic system plugin is more complex.  Actors can now use, learn and/or prepare spells from this screen now so new command options have been added.  The command that allows you to use a skill or cast a spell defaults to the command "Use".  It's probably best to set this to a more appropriate term depending on what type of system this class uses.  If they are a spell caster, you might want to label this command "Cast".  If they are a melee character, maybe "Use" or "Perform" is a better fit.
-* **Prepare text** - This is the command used when an actor prepares their spells or skills for the day.  A Cleric might call this "Pray" since they pray to their god for spells each day.  A Wizard might "Memorize" their spells.  Set this to what's most appropriate for this class.
-* **Learn Text** - If a class learns at least some of their spells by choosing them from their spell list (see Spells Known), they will have a "Learn" command.  Call it whatever you'd like.
+* **Text** - Configurable display text.
+  * **MP Label** - If Show As MP is the first magic entry set to true, use this text for this classes MP label. Leave blank to use the default MP label defined in the System tab.
+  * **Use Command** - The Skills menu usually just allows you to select the Skill Type and all of your learned skills are there for use.  But this magic system plugin is more complex.  Actors can now use, learn and/or prepare spells from this screen now so new command options have been added.  The command that allows you to use a skill or cast a spell defaults to the command "Use".  It's probably best to set this to a more appropriate term depending on what type of system this class uses.  If they are a spell caster, you might want to label this command "Cast".  If they are a melee character, maybe "Use" or "Perform" is a better fit.
+  * **Prepare Command** - This is the command used when an actor prepares their spells or skills for the day.  A Cleric might call this "Pray" since they pray to their god for spells each day.  A Wizard might "Memorize" their spells.  Set this to what's most appropriate for this class.
+  * **Learn Command** - If a class learns at least some of their spells by choosing them from their spell list (see Spells Known), they will have a "Learn" command.  Call it whatever you'd like.
+  * **Use Help** - Use command help text.
+  * **Prepare Help** - Prepare command help text.
+  * **Learn Help** - Learn command help text.
 
 
 ### Spell Lists
@@ -152,7 +157,7 @@ You're almost to the home stretch.  In fact, if you aren't going to use essence 
 
 **Essence Type** - Essence type that this enemy grants when defeated in battle.  See, unlike Final Fantasy 6, with this plugin, enemies may grant different types of essence when they die and certain spells might only be learnable with the right type.  Maybe you want each creature to give a different elemental type of essence when defeated.  A Slime gives out 1 water essence.  A Hell Hound grants 10 fire essence.  Some spells can only be learned through water essence and other through fire essence.  This is a nice way to make sure your players can just grind in the same spot to learn all of their spells.
 
-**Essence Amount** -  Ammount of essence this enemy grants when defeated in battle.  Each spell will require a certain amount of essence to learn it.  Weaker enemies will usually give out lower amounts of essence and vise versa.
+**Essence Amount** -  Amount of essence this enemy grants when defeated in battle.  Each spell will require a certain amount of essence to learn it.  Weaker enemies will usually give out lower amounts of essence and vise versa.
 
 
 ### Item Config
@@ -177,6 +182,10 @@ You're almost to the home stretch.  In fact, if you aren't going to use essence 
 
 Strangely enough, this plugin doesn't have a many script calls or plugin commands.  Well, it technically does but most of them would only be useful if you are a skilled JavaScript coder and if that's the case, look at the next to last section of the plugin code for a well documented list of script calls.  But for the general audience, I only have a couple plugin commands to share that I think will be useful.
 
+**Spell XP**
+
+In Damage Formulas, you can use **sxp** to reference the actor's Spell XP for the performed skill.  This is an alternative to using the global formula in the Options parameter.
+
 Recover magic for a single actor.  This only recovers spell slots and powers.  The editor's Recover All command is normally used to recover all HP, MP, spell slots and powers.
 ```javascript
 MAGIC RECOVER actorId
@@ -197,8 +206,20 @@ ex. MAGIC ADDSCHOOL 3 1 Evocation
 
 Remove a school of magic from an actor:
 ```javascript
-MAGIC REMSCHOOL [actorId] [skillTypeId] [school]
+MAGIC REMSCHOOL actorId skillTypeId school
 ex. MAGIC REMSCHOOL 3 1 Divination
+```
+
+Manually set a spell's xp value (example sets Marsha's [skill 10] to the value 20)
+```javascript
+MAGIC SETXP actorId skill value
+ex. MAGIC SETXP 3 10 20
+```
+
+Add to a spell's xp value (example adds 5 to Marsha's [skill 10])
+```javascript
+MAGIC ADDXP actorId skill value
+ex. MAGIC SETXP 3 10 5
 ```
 
 
