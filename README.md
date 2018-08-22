@@ -4,7 +4,7 @@
 
 So who likes magic?  No one?  Oh well, I guess I’ve got nothing to share then.  Wait, what’s that?  Oh, sorry.  I’ve must have heard you wrong.  You make RPGs, of course you like magic!  Who doesn’t?  And even if you don't, you'll still like this plugin.
 
-![Boring](/img/boring.png)
+![Boring](/img/boring.PNG)
 
 ###### Boooring!
 
