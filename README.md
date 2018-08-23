@@ -107,6 +107,14 @@ This is where you'll configure your class's skill and magic systems.  These para
 * **Spellbook** - In another section of the plugin parameters, you'll define spell lists which contain all skill-relevant information like spell level and such.  Enter the name of the spell list you want this class to use for this Skill Type.
 * **School** - Spells can be separated into schools of magic.  In practical terms, these are just groups of spells.  I hope to do more with this but for now, it can be used to grant a subset of spells to a class.  Say you have Cleric spell list that has a bunch of spells that deal with life and death.  Heal, Harm, Raise Dead, Finger of Death etc.  A Paladin shouldn't get all of these death spells.  Those spells could be grouped into their own school and not given to the Paladin class.
 * **Spells Per Day** - Number of spell uses per slot by actor level, delimited by a /, starting with level zero.  Each line in this list corresponds to the character's level and describes how many spells of each level that they can prepare each day.
+  * Your Spells Per Day, Spells Known and Hybrid Retrieve will look similar to this.  You can use a dash to signify unlimited.
+  * 3/1
+  * 4/2
+  * 4/2/1
+  * 4/3/2
+  * 4/3/2/1
+  * 4/3/3/2
+  * etc.
 * **Spells Known** - Number of spells learned by actor level, delimited by a /.  Unless this parameter is left blank, this class will have a Learn command which is used to choose whatever spells they want to learn from their spell list.
 * **Hybrid Retrieve** - Hybrid casters use this list to determine how many spells they can prepare per day.  The number that they can cast still uses Spells Per Day but because the number they can prepare and the number that they can cast are different, they need this extra list filled in to configure this.
 * **Max Spell Level** - Most of the time, you can rely on this plugin figuring out the maximum level of spell a character can use by Spells Per Day or Spells Known, but some magic systems don't require these fields to be filled in.  If a class learns all of their spells through exposure or through essence and maybe also use the magic point system, there's no reason to fill in the three parameters above so this is use for those systems to specify what the maximum spell level a class can use.
@@ -178,7 +186,9 @@ You're almost to the home stretch.  In fact, if you aren't going to use essence 
   * **Skill Id** - Skill that is learned form this item.
   * **Essence Type** - Essence type required to learn this skill.
   * **Essence Required** - Required amount of essence this skill needs to be learned.  Low level spells won't need much essence to learn.  High level skills will need a lot.  This allows you to ensure that players don't just kill weak creatures to learn their spells.
-* **Armot Id** - Armor with magic properties.
+**Armor** - Configure effects of equipped armor.
+* **Desc**- Short description so that you know what this is. Not required but highly recommended.
+* **Armor Id** - Armor with magic properties.
 * **Learn From Essence** - Configure what spells can be learned and how much essence is required to do so.
   * **Skill Id** - Skill that is learned form this item.
   * **Essence Type** - Essence type required to learn this skill.
