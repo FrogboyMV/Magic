@@ -186,6 +186,7 @@ You're almost to the home stretch.  In fact, if you aren't going to use essence 
   * **Skill Id** - Skill that is learned form this item.
   * **Essence Type** - Essence type required to learn this skill.
   * **Essence Required** - Required amount of essence this skill needs to be learned.  Low level spells won't need much essence to learn.  High level skills will need a lot.  This allows you to ensure that players don't just kill weak creatures to learn their spells.
+
 **Armor** - Configure effects of equipped armor.
 * **Desc**- Short description so that you know what this is. Not required but highly recommended.
 * **Armor Id** - Armor with magic properties.
@@ -208,7 +209,7 @@ Recover magic for a single actor.  This only recovers spell slots and powers.  T
 MAGIC RECOVER actorId
 ex. MAGIC RECOVER 3
 ```
- 
+
 Recover magic for all actors.  This only recovers spell slots and powers.  The editor's Recover All command is normally used to recover all HP, MP, spell slots and powers.
 ```javascript
 MAGIC RECOVERALL
