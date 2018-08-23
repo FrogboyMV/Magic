@@ -208,7 +208,7 @@ Recover magic for a single actor.  This only recovers spell slots and powers.  T
 MAGIC RECOVER actorId
 ex. MAGIC RECOVER 3
 ```
-
+ 
 Recover magic for all actors.  This only recovers spell slots and powers.  The editor's Recover All command is normally used to recover all HP, MP, spell slots and powers.
 ```javascript
 MAGIC RECOVERALL
