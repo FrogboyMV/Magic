@@ -4,7 +4,7 @@
 
 So who likes magic?  No one?  Oh well, I guess I’ve got nothing to share then.  Wait, what’s that?  Oh, sorry.  I’ve must have heard you wrong.  You make RPGs, of course you like magic!  Who doesn’t?  And even if you don't, you'll still like this plugin.
 
-RPG Maker gives you some nice tools to build that RPG you’ve always wanted to make and the Skills system is fairly robust.  But there’s a problem and it’s actually kind of a big one.  All of the actor’s typically feel, well, samey.  I mean, I have this Fighter.  He uses skills which cost MP to perform special attacks until his MP runs out.  I also have a Mage.  She uses skills which cost MP to cast spells until her MP runs out.  In fact, all of my actors follow this same exact mechanic.  It would be much cooler if actor of different flavor felt and played differently from one another and had their own unique mechanics to work with.  There are plugins out there to change up the Skill system but you end up with the same issue.  All of your actor now use this new system but your Fighter still functions pretty much the same as your Mage.  You could try to add in several of these plugins that change the Skill system in different ways but that sounds like a risky proposition.  Conflicts seem likely in this scenario.
+RPG Maker gives you some nice tools to build that RPG you’ve always wanted to make and the Skills system is fairly robust.  But there’s a problem and it’s actually kind of a big one.  All of the actors typically feel, well, samey.  I mean, I have this Fighter.  He uses skills which cost MP to perform special attacks until his MP runs out.  I also have a Mage.  She uses skills which cost MP to cast spells until her MP runs out.  In fact, all of my actors follow this same exact mechanic.  It would be much cooler if actor of different flavor felt and played differently from one another and had their own unique mechanics to work with.  There are plugins out there to change up the Skill system but you end up with the same issue.  All of your actor now use this new system but your Fighter still functions pretty much the same as your Mage.  You could try to add in several of these plugins that change the Skill system in different ways but that sounds like a risky proposition.  Conflicts seem likely in this scenario.
 
 ![snap01](/img/snap01.PNG)
 
@@ -17,17 +17,17 @@ Not any longer.  If you know me and my work, you’ll know that my plugins are p
 
 ## Features
 
-Each class can be assigned any number of Skill Types that use whatever skill or magic system you create.
-
+* Each class can be assigned any number of Skill Types that use whatever skill or magic system you create.
 * 3 different caster types: prepared, spontaneous and hybrid.
 * 3 different resources: spell slots, magic points and powers.
 * Actors can automatically know none, all or only zero-level spells.
-* Spellbooks and schools of magic.  A class skill type can be restricted by schools or expanded beyond their normal spellbook.
+* Spellbooks and schools of magic.  A class skill type can be restricted to specific schools.  New schools can be added dynamically.
 * Spell levels.  Each spell in a spell list has a level which is used to determine when a class is able to learn it.  The same spell doesn't need to be the same level for every class.
 * Define number of spells known, prepared and/or retrieved per day.  If you’ve ever played D&D and know what 4/4/3/2/1 represents, you know what I’m talking about here.
-* Allow or restrict acquiring spells by player choice (player choice), items (learning from scrolls), exposure (learning by seeing the spell used in battle) and essence (slaying monsters while wearing special equipment).
+* Allow or restrict acquiring spells by learning (player choice), items (learning from scrolls), exposure (learning by seeing the spell used in battle) and essence (slaying monsters while wearing special equipment).
 * Spell components. Does that spell require Eye of Newt?  Your heroes better go find some newt.
-* Mix and match all of the above however you want. Lots of room to add new capabilities in the future.  Feel free to make requests.
+* Spell prerequisites.  Maybe you require your caster to learn Fire 1 before they can learn Fire 2.
+* Mix and match all of the above however you want.  Make your own creations.
 
 ![snap03](/img/snap03.PNG)
 
