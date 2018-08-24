@@ -11,7 +11,7 @@ FROG.Magic = FROG.Magic || {};
 if (!Imported.FROG_Core) console.error("This plugin requires FROG_Core");
 
 /*:
- * @plugindesc v0.9 Super-charge your classes
+ * @plugindesc v0.9.01 Super-charge your class mechanics
  * @author Frogboy
  *
  * @help
@@ -608,6 +608,7 @@ if (!Imported.FROG_Core) console.error("This plugin requires FROG_Core");
  * ============================================================================
  *
  * Version 0.9 - Beta release
+ * Version 0.9.01 - Bug fix
  *
  * ============================================================================
  *
@@ -1391,26 +1392,28 @@ Game_Actor.prototype.learnFromExposure = function (skill) {
         var spell = FROG.Magic.getSpell(actor, skill);
         var spellbookSpell = FROG.Magic.getSpellConfig(actorMagic.spellbook, skill);
 
-        if (!actor.hasSkill(skill.id) &&
-            spell.level > -1 &&
-            spell.level <= FROG.Magic.getActorMaxSlot(actor, skill.stypeId) &&
-            spellbookSpell.exposureAmount > 0 &&
-            spell.exposure < 100
-        ) {
-            // Add exposure
-            spell.exposure += spellbookSpell.exposureAmount;
-            spell.exposure = spell.exposure.clamp(0, 100);
-            if (spell.exposure === 100) {
-                actor.learnSkill(skill.id);
-            }
+        if (spell) {
+            if (!actor.hasSkill(skill.id) &&
+                spell.level > -1 &&
+                spell.level <= FROG.Magic.getActorMaxSlot(actor, skill.stypeId) &&
+                spellbookSpell.exposureAmount > 0 &&
+                spell.exposure < 100
+            ) {
+                // Add exposure
+                spell.exposure += spellbookSpell.exposureAmount;
+                spell.exposure = spell.exposure.clamp(0, 100);
+                if (spell.exposure === 100) {
+                    actor.learnSkill(skill.id);
+                }
 
-            // Compose battle log message
-            var text = FROG.Magic.getOptions("exposureLogText") || "\\c[24]%1\\c[0] has learned \\c[24]%2%\\c[0] of \\c[24]%3\\c[0]\n";
-            message = text.replace("%1", actor._name).replace("%2", spell.exposure).replace("%3", skill.name);
+                // Compose battle log message
+                var text = FROG.Magic.getOptions("exposureLogText") || "\\c[24]%1\\c[0] has learned \\c[24]%2%\\c[0] of \\c[24]%3\\c[0]\n";
+                message = text.replace("%1", actor._name).replace("%2", spell.exposure).replace("%3", skill.name);
 
-            // Add message to battle log
-            if (BattleManager._logWindow) {
-                BattleManager._logWindow.push('addText', message);
+                // Add message to battle log
+                if (BattleManager._logWindow) {
+                    BattleManager._logWindow.push('addText', message);
+                }
             }
         }
     }
