@@ -11,7 +11,7 @@ FROG.Magic = FROG.Magic || {};
 if (!Imported.FROG_Core) console.error("This plugin requires FROG_Core");
 
 /*:
- * @plugindesc v0.9.01 Super-charge your class mechanics
+ * @plugindesc v0.9.02 Super-charge your class mechanics
  * @author Frogboy
  *
  * @help
@@ -470,6 +470,9 @@ if (!Imported.FROG_Core) console.error("This plugin requires FROG_Core");
  *
  *    Item Id - Item required to use this spell.
  *    Count - Number of this item needed to use this spell.
+ *    Consume - Required item is consumed when spell is cast.  Most of the time,
+ *       this will be true but say you want a Cleric to have a Holy Symbol as a
+ *       focus object in order to Turn Undead.  Set this to false.
  *
  * Prerequisite - Required spells needed to learn this spell.  Maybe a character
  * need to learn Fire 1 before they can learn Fire 2.  That kinda makes sense.
@@ -590,6 +593,68 @@ if (!Imported.FROG_Core) console.error("This plugin requires FROG_Core");
  * MAGIC ADDXP actorId skill value
  * ex. MAGIC SETXP 3 10 5
  *
+ * Set a spell's used power count
+ * MAGIC SETPOW actorId skill value
+ *
+ * Add to a spell's used power count
+ * MAGIC ADDPOW actorId skill value
+ *
+ * Set a spell's max power count
+ * MAGIC SETPOWMAX actorId skill value
+ *
+ * Add to a spell's max power count
+ * MAGIC ADDPOWMAX actorId skill value
+ *
+ * Set a spell's power wait counter (cooldown)
+ * MAGIC SETPOWWAIT actorId skill value
+ *
+ * Add to a spell's power wait counter (cooldown)
+ * MAGIC ADDPOWWAIT actorId skill value
+ *
+ * Set a spell's power frequency (d = day, e = encounter, r = rounds, w = at
+ * will)
+ * MAGIC ADDPOWFREQ actorId skill value
+ *
+ * Dynamically add a spell to an actor's spell list
+ * {object} actor - An actor object or actor id
+ * {object} skill - A skill object or skill id
+ * {object} props - Properties of the new spell
+ *     {boolean} canLearn - Set to true if you want this spell to show up in
+ *        the Learn command menu
+ *     {array} components - Array of ojects that define the spell components
+ *         {number} itemId - Id of item required to cast this spell
+ *         {number} count - The number of this item consumed in the casting of
+ *            this spell
+ *     {number} level - Level of this spell
+ *     {number} powerMax - Max power uses
+ *     {number} powerFrequency - Power frequency
+ *     {array} prerequisite - Array of skill ids that need to be learned before
+ *        this one can be
+ *     {string} school - School of magic
+ * FROG.Magic.addSpell(actor, skill, props);
+ *
+ * Ex. Add skill 10 to actor 2
+ * FROG.Magic.addSpell(2, 10, {
+ *   canLearn: true,
+ *   components: [
+ *     { itemId: 1, count: 2, consume: true },
+ *     { itemId: 2, count: 1, consume: false }
+ *   ],
+ *   level: 1,
+ *   powerMax: 3,
+ *   powerFrequency: "d",
+ *   prerequisite: [],
+ *   school: "enchantment"
+ * });
+ *
+ * Dynamically remove a spell from an actor's spell list
+ * {object} actor - An actor object or actor id
+ * {object} skill - A skill object or skill id
+ * FROG.Magic.removeSpell(actor, skill);
+ *
+ * Ex. Remove skill 10 from actor 2
+ * FROG.Magic.addSpell(2, 10);
+ *
  *
  * ============================================================================
  * Terms of Use
@@ -609,6 +674,7 @@ if (!Imported.FROG_Core) console.error("This plugin requires FROG_Core");
  *
  * Version 0.9 - Beta release
  * Version 0.9.01 - Bug fix
+ * Version 0.9.02 - Added more plugin commands.
  *
  * ============================================================================
  *
@@ -1229,6 +1295,13 @@ if (!Imported.FROG_Core) console.error("This plugin requires FROG_Core");
  * @desc Number of this item needed to use this skill.
  * @default 1
  * @min 0
+ *
+ * @param Consume
+ * @type boolean
+ * @desc Some spells require a focus object which is not consumed in the casting.
+ * @default true
+ * @on Yes
+ * @off No
  */
 
 /*~struct~enemyConfigStruct:
@@ -1642,7 +1715,6 @@ Game_Actor.prototype.setup = function(actorId) {
     FROG.Magic.Game_Actor_setup.call(this, actorId);
     this.initializeMagic();
     this.initializeSpellInfo();
-    this.initializeSpellsKnown();
 }
 
 // Add spell info for every skill this actor can learn
@@ -1725,44 +1797,6 @@ Game_Actor.prototype.initializeMagic = function() {
     }
 
     this.resetMagicSlots();
-}
-
-// Initialize Spells Known
-Game_Actor.prototype.initializeSpellsKnown = function() {
-    var classMagicArr = FROG.Magic.getClassMagic(this);
-    if (!classMagicArr) return;
-
-    for (var j=0; j<classMagicArr.length; j++) {
-        var classMagic = classMagicArr[j];
-        if (classMagic && classMagic.defaultKnown && classMagic.spellbook) {
-            var spells = [];
-            switch (classMagic.defaultKnown) {
-                case "All":
-                    spells = FROG.Magic.getSpellInfo({
-                        actor: this,
-                        stypeId: classMagic.skillTypeId
-                    });
-                    break;
-
-                case "Zero Level":
-                    spells = FROG.Magic.getSpellInfo({
-                        actor: this,
-                        stypeId: classMagic.skillTypeId,
-                        level: 0
-                    });
-                    break;
-            }
-
-            // Learn default skills
-            if (spells && spells.length) {
-                for (var i=0; i<spells.length; i++) {
-                    if (spells[i] && spells[i].id) {
-                        this.learnSkill(spells[i].id);
-                    }
-                }
-            }
-        }
-    }
 }
 
 // Sets the current max slots usable to current level
@@ -2516,24 +2550,88 @@ FROG.Magic.addSpellInfo = function (actor, spellbook) {
         var classMagic = FROG.Magic.getClassMagic(actor, skill.stypeId);
         var powerUses = spellConfig.powerUse || {};
 
-        actorMagic.spellInfo.push({
-            id: skill.id,
-            essence: 0,
-            exposure: 0,
+        FROG.Magic.addSpell(actor, skill, {
             canLearn: spellConfig.canLearn,
-            canLearnFromItem: classMagic.learnFromItems,
             components: spellConfig.components || [],
             level: spellConfig.level,
-            powerCount: 0,
-            powerCountMax: powerUses.uses || 0,
             powerMax: powerUses.uses || 0,
             powerFrequency: powerUses.frequency || "w",
-            powerResetCounter: 0,
             prerequisite: spellConfig.prerequisite || [],
-            school: spellConfig.school.toLowerCase(),
-            stypeId: skill.stypeId,
-            xp: 0
+            school: spellConfig.school
         });
+    }
+}
+
+/** Add a new spell to an actor's spellInfo
+ * @param {object} actor - An actor object or id
+ * @param {object} skill - A skill object or id
+ * @param {object} props - Properties of the new spell
+ *     @param {boolean} canLearn - Set to true if you want this spell to show up in the Learn command menu
+ *     @param {array} components - Array of ojects that define the spell components
+ *         @param {number} itemId - Id of item required to cast this spell
+ *         @param {number} count - The number of this item consumed in the casting of this spell
+ *     @param {number} level - Level of this spell
+ *     @param {number} powerMax - Max power uses
+ *     @param {number} powerFrequency - Power frequency
+ *     @param {array} prerequisite - Array of skill ids that need to be learned before this one can be
+ *     @param {string} school - School of magic
+ */
+FROG.Magic.addSpell = function (actor, skill, props) {
+    if (typeof actor == "number") actor = $gameActors.actor(actor);
+    if (typeof skill == "number") skill = $dataSkills[skill];
+    actor = actor || {};
+    skill = skill || {};
+    props = props || null;
+
+    var actorMagic = FROG.Magic.getActorMagic(actor, skill.stypeId);
+    if (!actorMagic || !props) return;
+    var classMagic = FROG.Magic.getClassMagic(actor, skill.stypeId) || {};
+
+    actorMagic.spellInfo.push({
+        id: skill.id,
+        essence: 0,
+        exposure: 0,
+        canLearn: props.canLearn || false,
+        canLearnFromItem: classMagic.learnFromItems || false,
+        components: props.components || [],
+        level: props.level || 0,
+        powerCount: 0,
+        powerCountMax: props.powerMax || 0,
+        powerMax: props.powerMax || 0,
+        powerFrequency: props.powerFrequency || "w",
+        powerResetCounter: 0,
+        prerequisite: props.prerequisite || [],
+        school: props.school ? props.school.toLowerCase() : "",
+        stypeId: skill.stypeId,
+        xp: 0
+    });
+
+    // Learn skill if actor knows it by default
+    if (classMagic.defaultKnown == "All" || (classMagic.defaultKnown == "Zero Level" && props.level === 0)) {
+        actor.learnSkill(skill.id);
+    }
+}
+
+/** Remove a spell from an actor's spellInfo
+ * @param {object} actor - An actor object or id
+ * @param {object} skill - A skill object or id
+ */
+FROG.Magic.removeSpell = function (actor, skill) {
+    if (typeof actor == "number") actor = $gameActors.actor(actor);
+    if (typeof skill == "number") skill = $dataSkills[skill];
+    actor = actor || {};
+    skill = skill || {};
+
+    var actorMagic = FROG.Magic.getActorMagic(actor, skill.stypeId);
+    if (!actorMagic) return;
+
+    var index = actorMagic.spellInfo.map(function(info) {
+        return info.id;
+    }).indexOf(skill.id);
+
+    if (index > -1) {
+        actorMagic.spellInfo.splice(index, 1);
+        actor.forgetSkill(skill.id);
     }
 }
 
@@ -2721,6 +2819,31 @@ FROG.Magic.getSpell = function (actor, skill, prop) {
     }
 
     return null;
+}
+
+/** Alter the properties of a single actor's spell
+ * @param {object} actor - An actor
+ * @param {object} skill - A skill
+ * @param {number} value - Value to set the spell's xp to
+ */
+FROG.Magic.alterSpell = function (options) {
+    var actor = options.actor || {};
+    var skill = options.skill || {};
+    var prop = options.prop || "";
+    var value = options.value || 0;
+    var operator = options.operator || "";
+    if (typeof actor == "number") actor = $gameActors.actor(actor);
+    if (typeof skill == "number") skill = $dataSkills[skill];
+
+    var spell = FROG.Magic.getSpell(actor, skill);
+    if (spell && prop && value && operator) {
+        if (operator.toLowerCase() == "add") {
+            spell[prop] += value;
+        }
+        else {
+            spell[prop] = value;
+        }
+    }
 }
 
 /** Retrieve spells for an actor's Learn list
@@ -3594,7 +3717,9 @@ FROG.Magic.useSpellComponents = function (actor, skill) {
         for (var i=0; i<components.length; i++) {
             var comp = components[i];
             for (var j=0; j<comp.count; j++) {
-                $gameParty.consumeItem($dataItems[comp.itemId]);
+                if (comp.consume) {
+                    $gameParty.consumeItem($dataItems[comp.itemId]);
+                }
             }
         }
     }
@@ -3655,41 +3780,6 @@ FROG.Magic.removeSchool = function (actor, stypeId, school) {
     }
 }
 
-/** Manually set a spell's xp value
- * @param {object} actor - An actor
- * @param {object} skill - A skill
- * @param {number} value - Value to set the spell's xp to
- */
-FROG.Magic.setSpellXP = function (actor, skill, value) {
-    if (typeof actor == "number") actor = $gameActors.actor(actor);
-    if (typeof skill == "number") skill = $dataSkills[skill];
-    actor = actor || {};
-    skill = skill || {};
-    value = value || 0;
-
-    var spell = FROG.Magic.getSpell(actor, skill);
-    if (spell) {
-        spell.xp = ~~value;
-    }
-}
-
-/** Add to a spell's xp value
- * @param {object} actor - An actor
- * @param {object} skill - A skill
- * @param {number} value - Value to set the spell's xp to
- */
-FROG.Magic.gainSpellXP = function (actor, skill, value) {
-    if (typeof actor == "number") actor = $gameActors.actor(actor);
-    if (typeof skill == "number") skill = $dataSkills[skill];
-    actor = actor || {};
-    skill = skill || {};
-    value = value || 0;
-
-    var spell = FROG.Magic.getSpell(actor, skill);
-    if (spell) {
-        spell.xp += ~~value;
-    }
-}
 
 /* ---------------------------------------------------------------*\
                         Plugin Commands
@@ -3729,13 +3819,123 @@ Game_Interpreter.prototype.pluginCommand = function (command, args) {
                 case "SETXP":
                     var skillId = ~~FROG.Core.formatArg(args[2]);
                     var value = FROG.Core.formatArg(args[3]);
-                    FROG.Magic.setSpellXP(actorId, skillId, value);
+                    FROG.Magic.alterSpell({
+                        actor: actorId,
+                        skill: skillId,
+                        prop: "xp",
+                        value: ~~value,
+                        operator: "set"
+                    });
                     break;
 
                 case "ADDXP":
                     var skillId = ~~FROG.Core.formatArg(args[2]);
                     var value = FROG.Core.formatArg(args[3]);
-                    FROG.Magic.gainSpellXP(actorId, skillId, value);
+                    FROG.Magic.alterSpell({
+                        actor: actorId,
+                        skill: skillId,
+                        prop: "xp",
+                        value: ~~value,
+                        operator: "add"
+                    });
+                    break;
+
+                case "SETPOW":
+                    var skillId = ~~FROG.Core.formatArg(args[2]);
+                    var value = FROG.Core.formatArg(args[3]);
+                    FROG.Magic.alterSpell({
+                        actor: actorId,
+                        skill: skillId,
+                        prop: "powerCount",
+                        value: ~~value,
+                        operator: "set"
+                    });
+                    break;
+
+                case "ADDPOW":
+                    var skillId = ~~FROG.Core.formatArg(args[2]);
+                    var value = FROG.Core.formatArg(args[3]);
+                    FROG.Magic.alterSpell({
+                        actor: actorId,
+                        skill: skillId,
+                        prop: "powerCount",
+                        value: ~~value,
+                        operator: "add"
+                    });
+                    break;
+
+                case "SETPOWMAX":
+                    var skillId = ~~FROG.Core.formatArg(args[2]);
+                    var value = FROG.Core.formatArg(args[3]);
+                    FROG.Magic.alterSpell({
+                        actor: actorId,
+                        skill: skillId,
+                        prop: "powerMax",
+                        value: ~~value,
+                        operator: "set"
+                    });
+                    FROG.Magic.alterSpell({
+                        actor: actorId,
+                        skill: skillId,
+                        prop: "powerCountMax",
+                        value: ~~value,
+                        operator: "set"
+                    });
+                    break;
+
+                case "ADDPOWMAX":
+                    var skillId = ~~FROG.Core.formatArg(args[2]);
+                    var value = FROG.Core.formatArg(args[3]);
+                    FROG.Magic.alterSpell({
+                        actor: actorId,
+                        skill: skillId,
+                        prop: "powerMax",
+                        value: ~~value,
+                        operator: "add"
+                    });
+                    FROG.Magic.alterSpell({
+                        actor: actorId,
+                        skill: skillId,
+                        prop: "powerCountMax",
+                        value: ~~value,
+                        operator: "add"
+                    });
+                    break;
+
+                case "SETPOWWAIT":
+                    var skillId = ~~FROG.Core.formatArg(args[2]);
+                    var value = FROG.Core.formatArg(args[3]);
+                    FROG.Magic.alterSpell({
+                        actor: actorId,
+                        skill: skillId,
+                        prop: "powerResetCounter",
+                        value: ~~value,
+                        operator: "set"
+                    });
+                    break;
+
+                case "ADDPOWWAIT":
+                    var skillId = ~~FROG.Core.formatArg(args[2]);
+                    var value = FROG.Core.formatArg(args[3]);
+                    FROG.Magic.alterSpell({
+                        actor: actorId,
+                        skill: skillId,
+                        prop: "powerResetCounter",
+                        value: ~~value,
+                        operator: "add"
+                    });
+                    break;
+
+                case "SETPOWFREQ":
+                    var skillId = ~~FROG.Core.formatArg(args[2]);
+                    var value = FROG.Core.formatArg(args[3]);
+                    FROG.Magic.alterSpell({
+                        actor: actorId,
+                        skill: skillId,
+                        prop: "powerFrequency",
+                        value: value,
+                        operator: "set"
+                    });
                     break;
             }
         }
