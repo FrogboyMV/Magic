@@ -158,6 +158,7 @@ The second really important part of this plugin is Spell Lists.  If you've playe
   * **Components** - You didn't think I'd make a D&D-like magic system without allowing you to specify spell components, did you?  Oh, ye of little faith.  So yeah, if you're spell needs some Eye of Newt, define that here.
     * **Item Id** - Item required to use this spell.
 	* **Count** - Number of this item needed to use this spell.
+    * **Consume** - Required item is consumed when spell is cast.  Most of the time, this will be true but say you want a Cleric to have a Holy Symbol as a focus object in order to Turn Undead.  Set this to false.
   * **Prerequisite** - Required spells needed to learn this spell.  Maybe a character need to learn Fire 1 before they can learn Fire 2.  That kinda makes sense.  If you want to set up your magic system so that certain spells need to be learned before other, more powerful ones, you can set up prerequisites.
   * **Can Learn** - Perhaps a spell is rare or unique.  Maybe it can't be just learned normally throught the Learn command.  If that's the case, set this to false.
   
@@ -238,6 +239,86 @@ Add to a spell's xp value (example adds 5 to Marsha's [skill 10])
 ```javascript
 MAGIC ADDXP actorId skill value
 ex. MAGIC SETXP 3 10 5
+```
+
+Set a spell's used power count
+```javascript
+MAGIC SETPOW actorId skill value
+```
+
+Add to a spell's used power count
+```javascript
+MAGIC ADDPOW actorId skill value
+```
+
+Set a spell's max power count
+```javascript
+MAGIC SETPOWMAX actorId skill value
+```
+
+Add to a spell's max power count
+```javascript
+MAGIC ADDPOWMAX actorId skill value
+```
+
+Set a spell's power wait counter (cooldown)
+```javascript
+MAGIC SETPOWWAIT actorId skill value
+```
+
+Add to a spell's power wait counter (cooldown)
+```javascript
+MAGIC ADDPOWWAIT actorId skill value
+```
+
+Set a spell's power frequency (d = day, e = encounter, r = rounds, w = at will)
+```javascript
+MAGIC ADDPOWFREQ actorId skill value
+```
+
+Dynamically add a spell to an actor's spell list
+```javascript
+/** Add a new spell to an actor's spellInfo
+ * @param {object} actor - An actor object or actor id
+ * @param {object} skill - A skill object or skill id
+ * @param {object} props - Properties of the new spell
+ *     @param {boolean} canLearn - Set to true if you want this spell to show up in the Learn command menu
+ *     @param {array} components - Array of ojects that define the spell components
+ *         @param {number} itemId - Id of item required to cast this spell
+ *         @param {number} count - The number of this item consumed in the casting of this spell
+ *     @param {number} level - Level of this spell
+ *     @param {number} powerMax - Max power uses
+ *     @param {number} powerFrequency - Power frequency
+ *     @param {array} prerequisite - Array of skill ids that need to be learned before this one can be
+ *     @param {string} school - School of magic
+ */
+FROG.Magic.addSpell(actor, skill, props);
+
+Ex. Add skill 10 to actor 2
+FROG.Magic.addSpell(2, 10, {
+  canLearn: true,
+  components: [
+    { itemId: 1, count: 2, consume: true },
+    { itemId: 2, count: 1, consume: false }
+  ],
+  level: 1,
+  powerMax: 3,
+  powerFrequency: "d",
+  prerequisite: [],
+  school: "enchantment"
+});
+```
+
+Dynamically remove a spell from an actor's spell list
+```javascript
+/** Remove a spell from an actor's spellInfo
+ * @param {object} actor - An actor object or actor id
+ * @param {object} skill - A skill object or skill id
+ */
+FROG.Magic.removeSpell(actor, skill);
+
+Ex. Remove skill 10 from actor 2
+FROG.Magic.addSpell(2, 10);
 ```
 
 
