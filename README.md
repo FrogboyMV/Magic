@@ -332,3 +332,5 @@ Credit Frogboy in your work.
 ## Changelog
 
 * Version 0.9 - Beta release
+* Version 0.9.01 - Bug fix
+* Version 0.9.02 - Added more plugin commands.
