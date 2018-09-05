@@ -42,6 +42,8 @@ Here is a list of all of the plugin parameters and what they do.  As a quick not
 
 **Sort Order** - Skills now have levels, even if they use the traditional MP system.  So it makes sense to sort them by level so that you can place the most powerful or least powerful skills on top.  Use this option to choose which way you'd like them sorted for the player.
 
+**Show All Spell Levels** - Normally, only the spell slots that an actor has learned will be displayed.  So if the highest level of spell an actor can cast is 3rd level, it'll show as something like 4/3/3/2.  But if you want every slot to always show, turn this option on.  This same actor will now show 4/3/3/2/0/0/0/0/0/0 if they have 9 levels of spells.  Zero-level spells are always ignored in the display if an actor doesn't have any because some classes, like the Paladin and Ranger in D&D, start at first level spells.
+
 **Cost Indicator** - Configure how the cost for spell slots, magic points and powers are displayed in the skill selection window.
 * **Spell Slots** - Style the Spell Slot indicator.
   * **Format** - Text format for this cost indicator. Use %1 to indicate the slot level.
@@ -334,3 +336,4 @@ Credit Frogboy in your work.
 * Version 0.9 - Beta release
 * Version 0.9.01 - Bug fix
 * Version 0.9.02 - Added more plugin commands.
+* Version 0.9.03 - Bug fix. Small feature additions.
