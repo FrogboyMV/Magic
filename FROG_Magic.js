@@ -11,7 +11,7 @@ FROG.Magic = FROG.Magic || {};
 if (!Imported.FROG_Core) console.error("This plugin requires FROG_Core");
 
 /*:
- * @plugindesc v0.9.02 Super-charge your class mechanics
+ * @plugindesc v0.9.03 Super-charge your class mechanics
  * @author Frogboy
  *
  * @help
@@ -120,12 +120,20 @@ if (!Imported.FROG_Core) console.error("This plugin requires FROG_Core");
  * most powerful or least powerful skills on top.  Use this option to choose
  * which way you'd like them sorted for the player.
  *
+ * Show All Spell Levels - Normally, only the spell slots that an actor has
+ * learned will be displayed.  So if the highest level of spell an actor can
+ * cast is 3rd level, it'll show as something like 4/3/3/2.  But if you want
+ * every slot to always show, turn this option on.  This same actor will now
+ * show 4/3/3/2/0/0/0/0/0/0 if they have 9 levels of spells.  Zero-level spells
+ * are always ignored in the display if an actor doesn't have any because some
+ * classes, like the Paladin and Ranger in D&D, start at first level spells.
+ *
  * Cost Indicator - Configure how the cost for spell slots, magic points and
  * powers are displayed in the skill selection window.
  *
  *    Spell Slots - Style the Spell Slot indicator.
  *       Format - Text format for this cost indicator. Use %1 to indicate the
- *          slot level.
+ *          slot level, %2 for number of slots remaining.
  *       Color - Text color for this indicator.  Choose one of the default colors
  *          or enter a hex code.
  *       Font Size - Font size in pixel height.
@@ -675,6 +683,7 @@ if (!Imported.FROG_Core) console.error("This plugin requires FROG_Core");
  * Version 0.9 - Beta release
  * Version 0.9.01 - Bug fix
  * Version 0.9.02 - Added more plugin commands.
+ * Version 0.9.03 - Bug fixes, small feature additions.
  *
  * ============================================================================
  *
@@ -733,6 +742,14 @@ if (!Imported.FROG_Core) console.error("This plugin requires FROG_Core");
  * @type struct<costIndicatorStruct>
  * @desc Style the cost indicators in the skill list window.
  * @default {"Spell Slots":"{\"Format\":\"L%1\",\"Color\":\"24 - Pale Green\",\"Font Size\":\"22\"}","Magic Points":"{\"Format\":\"%1MP\",\"Color\":\"2 - Mango\",\"Font Size\":\"22\"}","Powers":"{\"Format Per Day\":\"%1/Day\",\"Format Per Encounter\":\"%1/Enc\",\"Format Cooldown\":\"%1 Rnd\",\"Format At Will\":\"At Will\",\"Color\":\"6 - Light Yellow\",\"Font Size\":\"22\"}"}
+ *
+ * @param Show All Spell Levels
+ * @parent Parameters
+ * @type boolean
+ * @desc If you want to display spell slots that haven't been learned yet, turn this on. Ex. 4/3/3/2/0/0/0/0/0/0
+ * @default false
+ * @on Yes
+ * @off No
  *
  * @param Spell XP
  * @type struct<spellXPStruct>
@@ -854,8 +871,8 @@ if (!Imported.FROG_Core) console.error("This plugin requires FROG_Core");
 /*~struct~slotIndicatorStruct:
  * @param Format
  * @type text
- * @desc Text format for this cost indicator. Use %1 to indicate the slot level.
- * @default L%1
+ * @desc Text format for this cost indicator. Use %1 to indicate the slot level, %2 for number of slots remaining.
+ * @default %2/L%1
  *
  * @param Color
  * @type combo
@@ -1408,20 +1425,18 @@ if (!Imported.FROG_Core) console.error("This plugin requires FROG_Core");
  */
 
 var $frogMagic = {};
+FROG.Core.jsonParams(PluginManager.parameters('FROG_Magic'), $frogMagic);
 
 /* ---------------------------------------------------------------*\
                             Data Manager
 \* -------------------------------------------------------------- */
 
 // Load in plugin paramters
-FROG.Magic.DataManager_IsDatabaseLoaded = DataManager.isDatabaseLoaded;
-DataManager.isDatabaseLoaded = function () {
-    if (!FROG.Magic.DataManager_IsDatabaseLoaded.call(this)) return false;
-    if (FROG.Core.isEmpty($frogMagic)) {
-        FROG.Core.jsonParams(PluginManager.parameters('FROG_Magic'), $frogMagic);
-        //console.log($frogMagic);
-    }
-    return true;
+FROG.Magic.DataManager_setupNewGame = DataManager.setupNewGame;
+DataManager.setupNewGame = function () {
+    FROG.Magic.DataManager_setupNewGame.call(this);
+    FROG.Core.jsonParams(PluginManager.parameters('FROG_Magic'), $frogMagic);
+    //console.log($frogMagic);
 }
 
 // Save File
@@ -1766,7 +1781,7 @@ Game_Actor.prototype.initializeMagic = function() {
     for (var j=0; j<classMagicArr.length; j++) {
         var classMagic = classMagicArr[j];
         if (!classMagic || !classMagic.skillTypeId) continue;
-        classMagic.maxSlotLevel = classMagic.maxSlotLevel || 9;
+        classMagic.maxSlotLevel = FROG.Magic.getSpellList(classMagic.spellbook).maxSpellLevel || 9;
         classMagic.school = classMagic.school.map(function (sph) {
             return sph.toLowerCase();
         });
@@ -1812,7 +1827,7 @@ Game_Actor.prototype.resetMagicSlots = function() {
 
         // Spells per day
         var txtSlots = classMagic.spellsPerDay[this._level];
-        if (txtSlots) {// && txtSlots.toString().indexOf('/') > -1) {
+        if (txtSlots) {
             var arr = (txtSlots + "/").split('/');
             for (var i=0; i<arr.length-1; i++) {
                 actorMagic.max[i] = (arr[i] === "-") ? arr[i] : ~~arr[i];
@@ -1821,7 +1836,7 @@ Game_Actor.prototype.resetMagicSlots = function() {
 
         // Hybrid Retrieve Spells
         var txtSlots = classMagic.hybridRetrieve[this._level];
-        if (txtSlots) { // && txtSlots.toString().indexOf('/') > -1) {
+        if (txtSlots) {
             var arr = (txtSlots + "/").split('/');
             for (var i=0; i<arr.length-1; i++) {
                 actorMagic.retrievedMax[i] = (arr[i] === "-") ? arr[i] : ~~arr[i];
@@ -1830,7 +1845,7 @@ Game_Actor.prototype.resetMagicSlots = function() {
 
         // Spells known
         var spellsKnown = classMagic.spellsKnown[this._level];
-        if (spellsKnown) { // && spellsKnown.toString().indexOf('/') > -1) {
+        if (spellsKnown) {
             var arr = (spellsKnown + "/").split('/');
             for (var i=0; i<arr.length-1; i++) {
                 actorMagic.known[i] = ~~arr[i];
@@ -2364,7 +2379,7 @@ Window_SkillList.prototype.drawSkillCost = function(skill, x, y, width) {
                 text = "L" + slotLevel;
                 if (options && options.costIndicator && options.costIndicator.spellSlots) {
                     var costObj = options.costIndicator.spellSlots;
-                    text = (costObj.format) ? costObj.format.replace("%1", slotLevel) : "";
+                    text = (costObj.format) ? costObj.format.replace("%1", slotLevel).replace("%2", FROG.Magic.numSlotsAvailable(actor, skill)) : "";
                     color = costObj.color;
                     fontSize = costObj.fontSize || 0;
                 }
@@ -2687,6 +2702,17 @@ FROG.Magic.getSpellInfo = function (options) {
     return (spellInfo && !FROG.Core.isEmpty(spellInfo)) ? spellInfo : dfault;
 }
 
+/** Gets spell list from plugin parameters
+ * @param {string} spellbook - Name of a spell list
+ * @return {object} Returns spell list object
+ */
+FROG.Magic.getSpellList = function (spellbook) {
+    spellbook = spellbook || "";
+    return $frogMagic.spellLists.find(function (list) {
+        return list.name.toLowerCase() == spellbook.toLowerCase();
+    }) || null;
+}
+
 /** Gets spell info from spell list plugin parameters
  * @param {string} spellbook - Name of a spell list
  * @param {object} skill - A skill
@@ -2698,10 +2724,7 @@ FROG.Magic.getSpellConfig = function (spellbook, skill) {
     spellbook = spellbook || "";
 
     if (spellbook) {
-        var spellList = $frogMagic.spellLists.filter(function (list) {
-            return list.name.toLowerCase() == spellbook.toLowerCase();
-        })[0] || null;
-
+        var spellList = FROG.Magic.getSpellList(spellbook);
         if (spellList) {
             if (!FROG.Core.isEmpty(skill)) {
                 return spellList.spellConfig.filter(function (list) {
@@ -3016,13 +3039,12 @@ FROG.Magic.getActorSlotsDisplay = function (actor, stypeId) {
     actor = actor || {};
     var slotsText = "";
     var actorMagic = FROG.Magic.getActorMagic(actor, stypeId);
-
     if (actorMagic && actorMagic.max && actorMagic.used) {
         for (var i=0; i<actorMagic.max.length; i++) {
             if (actorMagic.max[i] == "-") {
                 slotsText += "-/";
             }
-            else if (actorMagic.max[i] > 0) {
+            else if (actorMagic.max[i] > 0 || (FROG.Magic.getOptions("showAllSpellLevels") && i > 0)) {
                 slotsText += (actorMagic.max[i] - actorMagic.used[i]) + "/";
             }
         }
@@ -3067,6 +3089,15 @@ FROG.Magic.getActorPowersDisplay = function (actor, stypeId) {
  * @returns {boolean} Returns true if the actor has a spell slot available, false if not.
  */
 FROG.Magic.isSlotAvailable = function (actor, skill) {
+    return FROG.Magic.numSlotsAvailable(actor, skill) > 0;
+}
+
+/** Determines how many slots are available for a given skill.
+ * @param {object} actor - An actor
+ * @param {object} skill - A skill
+ * @returns {number} Returns number of uses left
+ */
+FROG.Magic.numSlotsAvailable = function (actor, skill) {
     if (typeof actor == "number") actor = $gameActors.actor(actor);
     if (typeof skill == "number") skill = $dataSkills[skill];
     actor = actor || {};
@@ -3079,10 +3110,10 @@ FROG.Magic.isSlotAvailable = function (actor, skill) {
         var used = actorMagic.used[slotLevel];;
         var max = actorMagic.max[slotLevel];;
         if (max === "-") max = 99999;
-        return (max - used) > 0;
+        return max - used;
     }
 
-    return true;
+    return 99999;
 }
 
 /** Determines if a power is available for a given skill
